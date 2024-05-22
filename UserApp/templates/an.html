@@ -1,0 +1,155 @@
+{% load get_item %}
+
+<!-- <!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject: {{ subject.sname }}</title>
+</head>
+<body>
+    <h1>Subject: {{ subject.sname }}</h1>
+    <p>Subject ID: {{ subject.id }}</p>
+
+    <h2>Questions:</h2>
+    {% for question in questions %}
+    {% for answer in answers %}
+        <div>
+            <h3>Question: {{ question.question }}</h3>
+            <h3>Answer: {{ answer.answer }}</h3>
+        </div>
+    {% endfor %}
+    {% endfor %}
+</body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject: {{ subject.sname }}</title>
+</head>
+<body>
+    <h1>Subject: {{ subject.sname }}</h1>
+    <p>Subject ID: {{ subject.id }}</p>
+
+    <h2>Questions:</h2>
+    {% for question in questions %}
+        <div>
+            <h3>Question: {{ question.question }}</h3>
+            <p>Marks: {{ question.marks }}</p>
+            <h4>Answers:</h4>
+            <ul>
+            {% for answer in answers[question.id] %}
+                <li>{{ answer.answer }} {% if answer.is_correct %}(Correct){% endif %}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html>
+ <!-- -->
+ <!-- <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Subject: {{ subject.sname }}</title>
+ </head>
+ <body> -->
+     <!-- <h1>Subject: {{ subject.sname }}</h1>
+     <p>Subject ID: {{ subject.id }}</p>
+ 
+     <h2>Questions:</h2>
+     {% for question in questions %}
+         <div>
+             <h3>Question: {{ question.question }}</h3>
+             <p>Marks: {{ question.marks }}</p>
+             <h4>Answers:</h4>
+             <ul>
+             <!-- {% for answer in answers|get_item:question.id %} -->
+             <!-- {% for answer in answers[question.id] %}
+             {% for answer in answers|get:question.id %}
+
+                 <li>{{ answer.answer }} {% if answer.is_correct %}(Correct){% endif %}</li>
+             {% endfor %}
+             </ul>
+         </div>
+     {% endfor %}
+ </body>
+ </html> -->
+
+ <!-- <h1>Subject: {{ subject.sname }}</h1>
+ <p>Subject ID: {{ subject.id }}</p>
+ 
+ <h2>Questions:</h2>
+ {% for question in questions %}
+     <div>
+         <h3>Question: {{ question.question }}</h3>
+         <p>Marks: {{ question.marks }}</p>
+         <h4>Answers:</h4>
+         <ul>
+             {% with question_id=question.id %}
+                 {% for answer in answers|get:question_id %}
+                     <li>{{ answer.answer }} {% if answer.is_correct %}(Correct){% endif %}</li>
+                 {% endfor %}
+             {% endwith %}
+         </ul>
+     </div>
+ {% endfor %}
+</body>
+</html>  --> -
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject: {{ subject.sname }}</title>
+</head>
+<body>
+    <h1>Subject: {{ subject.sname }}</h1>
+    <p>Subject ID: {{ subject.id }}</p>
+
+    <h2>Questions:</h2>
+    {% for question in questions %}
+        <div>
+            <h3>Question: {{ question.question }}</h3>
+            <p>Marks: {{ question.marks }}</p>
+            <h4>Answers:</h4>
+            <ul>
+            {% for answer in answers[question.id] %}
+                <li>{{ answer.answer }} {% if answer.is_correct %}(Correct){% endif %}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject: {{ subject.sname }}</title>
+</head>
+<body>
+    <h1>Subject: {{ subject.sname }}</h1>
+    <p>Subject ID: {{ subject.id }}</p>
+
+    <h2>Questions:</h2>
+    {% for question in questions %}
+        <div>
+            <h3>Question: {{ question.question }}</h3>
+            <p>Marks: {{ question.marks }}</p>
+            <h4>Answers:</h4>
+             <ul>
+                <!-- {% for answer in answers[question.id] %} --> -->
+                {% for answer in answers|get_item:question.id %}
+
+                    <li>{{ answer.answer }} {% if answer.is_correct %}(Correct){% endif %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html>

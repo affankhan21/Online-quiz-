@@ -1,0 +1,229 @@
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject: {{ subject.sname }}</title>
+    <style>
+        /* Form container */
+        .form-container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+        }
+
+        /* Form header */
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Form inputs */
+        input[type="radio"] {
+            margin-right: 10px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="radio"]:checked {
+            background-color: #4CAF50;
+        }
+
+        /* Answer label */
+        .answer-label {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        /* Submit button */
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Total marks */
+        .total-marks {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Timer */
+        #timer {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+            color: #555;
+        }
+        #prev-btn {
+        background: linear-gradient(to right, #2196F3, #00BCD4); /* Blue gradient */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    #prev-btn:hover {
+        background: linear-gradient(to right, #0b7dda, #0097A7); /* Darker blue gradient */
+    }
+
+    /* Next button */
+    #next-btn {
+        background: linear-gradient(to right, #4CAF50, #8BC34A); /* Green gradient */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    #next-btn:hover {
+        background: linear-gradient(to right, #45a049, #7CB342); /* Darker green gradient */
+    }
+
+    /* Finish button */
+    .submit-btn {
+        background: linear-gradient(to right, #FF5722, #FF9800); /* Orange gradient */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(to right, #e64a19, #f57c00); /* Darker orange gradient */
+    }
+    
+    .question-container:nth-child(odd) {
+        background: linear-gradient(180deg, #FFD3A5, #FD6585);/* Gradient for odd question containers */
+}
+
+.question-container:nth-child(even) {
+    background: linear-gradient(90deg, #a1c4fd, #c2e9fb);/* Gradient for even question containers */
+}
+    .question-container {
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Subject: {{ subject.sname }}</h1>
+            <p>Subject ID: {{ subject.id }}</p>
+        </div>
+
+        <div id="timer"><h2>Time Left: <span id="time-left">60</span> seconds</h2></div>
+        <form id="quiz-form" method="post" action="{% url 'final' %}">
+            {% csrf_token %}
+            <input type="hidden" name="subject_id" value="{{ subject.id }}">
+    <input type="hidden" name="subject_name" value="{{ subject.sname }}">
+            {% for question in questions %}
+            <div class="question-container" {% if forloop.counter != 1 %} style="display: none;" {% endif %}>
+                <div class="question" id="question{{ forloop.counter }}">
+                    <h3>Question: {{ question.question }}</h3>
+                    <ul>
+                        {% for answer in answers|get_item:question.id %}
+                        <li>
+                            <input type="radio" id="answer_{{ answer.id }}" name="question_{{ question.id }}" value="{{ answer.id }}">
+                            <label for="answer_{{ answer.id }}" class="answer-label">{{ answer.answer }}</label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+            <button type="button" id="prev-btn" onclick="prevQuestion()">Previous</button>
+            <button type="button" id="next-btn" onclick="nextQuestion()">Next</button>
+            <button type="submit" class="submit-btn">Finish</button>
+            <input type="hidden" name="username" value="{{ request.user.username }}">
+        </form>
+
+        <!-- Timer -->
+       
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+const questions = document.querySelectorAll('.question-container');
+const totalMarksElement = document.getElementById('total-marks');
+const submitButton = document.getElementById('submit-btn');
+const nextButton = document.getElementById('next-btn');
+const prevButton = document.getElementById('prev-btn');
+const timerDisplay = document.getElementById('time-left');
+let timeLeft = 60; // Initial time in seconds
+let totalMarks = 0;
+let timerInterval; // Interval variable to hold the setInterval reference
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        questions[currentQuestion].style.display = 'none';
+        currentQuestion--;
+        questions[currentQuestion].style.display = 'block';
+        startTimer();
+    }
+    updateButtonStatus();
+}
+
+function nextQuestion() {
+    if (currentQuestion < questions.length - 1) {
+        questions[currentQuestion].style.display = 'none';
+        currentQuestion++;
+        questions[currentQuestion].style.display = 'block';
+        startTimer();
+    }
+    updateButtonStatus();
+}
+
+function updateButtonStatus() {
+    prevButton.disabled = currentQuestion === 0;
+    nextButton.disabled = currentQuestion === questions.length - 1;
+}
+
+function startTimer() {
+    clearInterval(timerInterval); // Clear any existing interval
+    timeLeft = 60; // Reset the timer to 60 seconds for each question
+    timerDisplay.textContent = timeLeft; // Update the timer display
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+        if (timeLeft <= 0 || currentQuestion === questions.length - 1) {
+            clearInterval(timerInterval);
+            if (currentQuestion < questions.length - 1) {
+                nextQuestion(); // Move to next question if timer expires
+            }
+        }
+    }, 1000);
+}
+
+startTimer(); // Start the timer when the page loads
+updateButtonStatus(); // Update button status when the page loads
+
+  </script>
+</body>
+</html>

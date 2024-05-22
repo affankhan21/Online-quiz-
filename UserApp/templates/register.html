@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #4e54c8, #8f94fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom right, #4e54c8, #8f94fb);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            background-color: #34ace0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            background-image: linear-gradient(to right, #34ace0, #1e90ff);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2189a9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #passwordCriteria {
+            list-style-type: disc;
+            display: block; /* Change display to block */
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <section id="register-section">
+            <h1>Register</h1>
+            {% if error_message %}
+            {{error_message}}
+            {% endif%}
+            <form method="post" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="uname">Username</label>
+                    <input type="text" id="uname" name="uname" required>
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password</label>
+                    <input type="password" id="pwd" name="pwd" required>
+                    <small id="passwordHelp" style="display:none; color:red;">Please match the requested format.</small>
+                    <ul id="passwordCriteria" style="display: block;">
+                        <li>Password must be at least 8 characters long.</li>
+                        <li>Password must contain at least one uppercase letter.</li>
+                        <li>Password must contain at least one lowercase letter.</li>
+                        <li>Password must contain at least one number.</li>
+                        <li>Password must contain at least one special character (!@#$%^&*).</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+    </div>
+    <script>
+        function validateForm() {
+            var password = document.getElementById("pwd").value;
+            var passwordHelp = document.getElementById("passwordHelp");
+            var passwordCriteria = document.getElementById("passwordCriteria");
+
+            // Regular expression for password validation
+            var strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+
+            // Check if password meets the criteria
+            if (!strongRegex.test(password)) {
+                passwordHelp.style.display = "block";
+                passwordCriteria.style.display = "block";
+                return false;
+            } else {
+                passwordHelp.style.display = "none";
+                passwordCriteria.style.display = "none";
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Quizify</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #4e54c8, #8f94fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 400px;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 2s ease-in-out; /* 2 seconds duration */
+        }
+
+        /* .logo img {
+            width: 100px;
+            height: 100px;
+            transition: transform 2s; /* 2 seconds duration */
+    
+        img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            animation: rotateLogo 2s linear infinite;
+            cursor: pointer;
+        }
+
+        @keyframes rotateLogo {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(90deg);
+            }
+        }
+
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 2s, box-shadow 2s; /* 2 seconds duration */
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.8); / /* Increased box-shadow for better visibility */
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px 0;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 2s; /* 2 seconds duration */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .messages {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .messages p {
+            margin: 5px 0;
+            color: #dc3545;
+        }
+
+        /* Form slide animation */
+        .slide-up {
+            transform: translateY(-100px); /* Slide up by 100 pixels */
+            transition: transform 2s ease-in-out; /* 2 seconds duration */
+        }
+
+        .slide-down {
+            transform: translateY(0);
+            transition: transform 2s ease-in-out; /* 2 seconds duration */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img id="logo"src= '{% static "otherImages/quiz.webp" %}' alt="Quizify Logo">
+        </div>
+        <h2>Login to Quizify</h2>
+        <!-- {% if messages %}
+            <div class="messages">
+                {{ message }}
+            </div>
+        {% endif %} -->
+        {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+        
+        <form id="login-form" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="uname" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <input type="password" name="pwd" placeholder="Password">
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('login-form');
+
+            // Slide up animation when page loads
+            form.classList.add('slide-up');
+
+            // Slide down animation when focusing on input fields
+            form.addEventListener('mouseenter', function () {
+                this.classList.remove('slide-up');
+                this.classList.add('slide-down');
+            });
+
+            // Slide up animation when mouse leaves input fields
+            form.addEventListener('mouseleave', function () {
+                this.classList.remove('slide-down');
+                this.classList.add('slide-up');
+                const logo = document.getElementById('logo');
+
+let isAnimating = true;
+
+logo.addEventListener('click', () => {
+    if (isAnimating) {
+        logo.style.animationPlayState = 'paused';
+    } else {
+        logo.style.animationPlayState = 'running';
+    }
+    isAnimating = !isAnimating;
+});
+
+function rotateLogo() {
+    setTimeout(() => {
+        logo.style.animationPlayState = 'paused';
+        setTimeout(() => {
+            logo.style.animationPlayState = 'running';
+            rotateLogo(); // Recursive call to repeat the cycle
+        }, 10000); // Stop for 10 seconds
+    }, 10000); // Rotate for 5 seconds
+}
+
+rotateLogo(); // Start the rotation cycle
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result for Subject: {{ subject_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define CSS classes for highlighting */
+        .correct-answer {
+            background-color: #8FBC8F; /* Light green */
+        }
+
+        .incorrect-answer {
+            background-color: #FF6347; /* Tomato red */
+        }
+
+        /* Additional styles for animations */
+        .highlight {
+            animation: highlightAnimation 1s infinite alternate; /* Animate background color */
+        }
+
+        @keyframes highlightAnimation {
+            from { background-color: #FFD700; } /* Gold */
+            to { background-color: #00FFFF; } /* Aqua */
+        }
+
+        /* Improved table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Overall page layout */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #555;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        /* Styling for the total marks section */
+        .total-marks-container {
+            text-align: center;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        #total-marks {
+            font-weight: bold;
+            font-size: 40px;
+            color: #333;
+            background: linear-gradient(135deg, #7b68ee, #4169e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: growAndShrink 2s infinite alternate;
+        }
+
+        @keyframes growAndShrink {
+            0% {
+                font-size: 40px; /* Initial font size */
+            }
+            100% {
+                font-size: 44px; /* Font size when fully grown */
+            }
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #777;
+            transition: color 0.3s ease;
+        }
+
+        footer a {
+            color: #777;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #333;
+        }
+
+        /* Emoji styling */
+        .emoji-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .emoji {
+            font-size: 36px;
+            margin-right: 5px;
+            animation: bounceAnimation 0.5s infinite alternate;
+        }
+
+        .good {
+            color: #4CAF50; /* Green */
+        }
+
+        .neutral {
+            color: #FFA500; /* Orange */
+        }
+
+        .bad {
+            color: #FF6347; /* Red */}
+        /* }
+        #btn-re {
+        display: inline-block;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #FFA500; 
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        justify-content: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+   
+    #btn-re:hover {
+        background-color: #FF6347; 
+    }
+
+
+    @keyframes pulseAnimation {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    
+    #btn-re {
+        animation: pulseAnimation 2s infinite alternate;
+    }
+
+    /
+    .center {
+        text-align: center;} */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #btn-re, #logout-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FFA500; /* Orange */
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, opacity 0.5s;
+            animation: fadeInAnimation 1s ease-in-out forwards;
+            opacity: 0;
+            margin: 0 10px; /* Added margin for spacing between buttons */
+        }
+
+        /* Hover effect */
+        #btn-re:hover, #logout-btn:hover {
+            background-color: #FF6347; /* Red */
+        }
+
+        /* Animation */
+        @keyframes fadeInAnimation {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Result for Subject: {{ subject_name }}</h1>
+    <h2>Username: <span id="username" class="{% if total_marks > 0 %}highlight{% endif %}">{{ username }}</span></h2>
+
+    <div style="overflow-x: auto;"> <!-- Add horizontal scroll bar for table overflow content -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Question Number</th> 
+                    <th>Question</th>
+                    <th>User's Answer</th>
+                    <th>Correct Answer</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in questions_with_answers %}
+                <tr class="{% if item.is_correct %}correct-answer{% else %}incorrect-answer{% endif %}">
+                    <td>{{ forloop.counter }}</td> 
+                    <td>{{ item.question.question }}</td>
+                    <td>{% if item.selected_answer %}{{ item.selected_answer.answer }}{% else %}No answer selected{% endif %}</td>
+                    <td>{{ item.correct_answer.answer }}</td>
+                    <td>{% if item.is_correct %}{{ item.correct_answer.question.marks }}{% else %}0{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="total-marks-container">
+        TOTAL MARKS <span id="total-marks">{{ total_marks }}/75</span>
+    </div>
+
+    <!-- Emojis based on marks -->
+    <div class="emoji-section">
+        {% if total_marks < 40 %}
+            <span class="emoji bad">😞</span>
+        {% elif total_marks < 70 %}
+            <span class="emoji neutral">😐</span>
+        {% else %}
+            <span class="emoji good">😊</span>
+        {% endif %}
+        <p>
+            {% if total_marks < 40 %}
+                Better Luck Next Time
+            {% elif total_marks < 70 %}
+                Can Improve
+            {% else %}
+                Excellent
+            {% endif %}
+        </p>
+    </div>
+    <div class="button-container center">
+        <button id="btn-re" onclick="window.location.href = 'http://127.0.0.1:8000/homep';">Take Test</button>
+        <button id="logout-btn" onclick="window.location.href = 'http://127.0.0.1:8000/login';">Logout</button>
+    </div>
+    <footer>
+        <p>Designed with ❤️ by <a href="https://www.linkedin.com/in/affan-khan-8aa477171/">Affan Khan</a></p>
+        <p>&copy; 2024 All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Highlight username based on correctness
+        const usernameElement = document.getElementById('username');
+        const hasIncorrectAnswer = document.querySelector('.incorrect-answer');
+
+        if (hasIncorrectAnswer) {
+            usernameElement.classList.add('incorrect-answer');
+        } else {
+            usernameElement.classList.add('correct-answer');
+        }
+       
+    
+    </script>
+</body>
+</html>

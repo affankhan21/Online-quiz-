@@ -1,0 +1,146 @@
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, #4e54c8, #8f94fb);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .user-details {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .user-details h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .user-details p {
+            color: #666;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.7s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Unique color for submit button */
+        button[type="submit"] {
+            background-color: #ff9800; /* Orange color */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #ffac33; /* Lighter shade of orange on hover */
+        }
+
+        /* Animation Keyframes */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+  <form method="post" action="{% url 'select_subject' %}">
+    {% csrf_token %}
+    <div class="container">
+        <div class="user-details">
+            <h2>Welcome <span id="username">{{ request.session.uname }}</span></h2>
+            <p>User Role: Student</p>
+        </div>
+
+        <!-- <label for="subject-dropdown">Select a subject:</label>
+        <select id="subject-dropdown">
+            {% for sub in subjects %}
+                <option value="/viewSubjects/{{ sub.id }}/">{{ sub.sname }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <script>
+        // JavaScript to handle redirection
+        document.getElementById('subject-dropdown').addEventListener('change', function() {
+            var selectedUrl = this.value;
+            if (selectedUrl) {
+                window.location.href = selectedUrl;
+            }
+        });
+    </script>
+</body>
+</html> -->
+
+<label for="subject">Select a Subject:</label>
+<select name="subject" id="subject">
+    {% for subject in subjects %}
+        <option value="{{ subject.id }}">{{ subject.sname }}</option>s
+    {% endfor %}
+</select>
+<button type="submit">Submit</button>
+</form>
+</body>
+</html>
